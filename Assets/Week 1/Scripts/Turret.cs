@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Turret : MonoBehaviour
 {
-    float speed = 3f;
+    float speed = 60f;
     // Start is called before the first frame update
     void Start()
     {
@@ -15,6 +15,6 @@ public class Turret : MonoBehaviour
     void Update()
     {
         float direction = Input.GetAxis("Vertical");
-        transform.Rotate(0,0, direction);
+        transform.Rotate(0,0, direction * speed * Time.deltaTime);
     }
 }
