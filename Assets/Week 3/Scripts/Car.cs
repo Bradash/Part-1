@@ -1,40 +1,54 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 
-public float steeringSpeed;
-public float forwardSpeed;
-public float maxSpeed;
+
 public class Car : MonoBehaviour
 {
-    Vector2 force;
-    Rigidbody2D rigidbody2;
-    // Start is called before the first frame update
-    void Start()
-        rigidbody2 = GetComponent<Rigidbody2D>();
-    {
-        
-    }
+    public float steeringSpeed;
+    public float forwardSpeed;
+    public float maxSpeed;
+    float steering;
+    float acceleration;
 
+
+    Vector2 force;
+
+    public Rigidbody2D rigidbody;
+    // Start is called before the first frame update
+    void Start()   
+    {
+        rigidbody = GetComponent<Rigidbody2D>();
+
+        steeringSpeed = 200;
+        forwardSpeed = 500;
+        maxSpeed = 1000;
+        
+
+    }
+    
     // Update is called once per frame
     void Update()
     {
 
-        float steering = Input.GetAxis("Horizontal");
-        float acceleration = Input.GetAxis("Vertical");
+        steering = - (Input.GetAxis("Horizontal"));
+        acceleration = Input.GetAxis("Vertical");
         
     }
 
     private void FixedUpdate()
     {
-        Rigidbody.AddTorque(steeringSpeed + steering + Time.deltaTime);
+        rigidbody.AddTorque(steeringSpeed * steering * Time.deltaTime);
 
+        force.y = acceleration * forwardSpeed;
+        rigidbody.AddRelativeForce(force * Time.deltaTime);
 
-            //Don't accelerate if we're already at top speed :P
-if (rigidbody.velocity.magnitude < maxSpeed)
+        //Don't accelerate if we're already at top speed :P
+        if (rigidbody.velocity.magnitude < maxSpeed)
         {
-            rigidbody.AddForce(force);
+            rigidbody.AddRelativeForce(force * Time.deltaTime);
         }
     }
 }
